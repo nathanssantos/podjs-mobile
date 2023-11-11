@@ -15,20 +15,6 @@ type FindParams = {
 
 type Track = import('react-native-track-player').Track;
 
-// type Podcast = {
-//   title: string;
-//   link: string;
-//   isoDate: string;
-//   enclosure: import('rss-parser').Enclosure;
-//   content: string;
-//   itunes: {
-//     summary: string;
-//     duration: string;
-//     image: string;
-//   };
-//   imageFallback?: string;
-// };
-
 type Collection = {
   id: string;
   artistName: string;

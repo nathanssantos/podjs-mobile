@@ -1,38 +1,40 @@
 import { makeAutoObservable } from 'mobx';
 import type { RootStore } from './rootStore';
+import TrackPlayer from 'react-native-track-player';
 
 export default class PlayerStore {
   rootStore: RootStore;
 
-  currentPodcast: Podcast | null = null;
-  playList: Podcast[] = [];
+  queue: Track[] = [];
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this, { rootStore: false });
     this.rootStore = rootStore;
   }
 
-  addPodcastToPlayList = (podcast: Podcast) => {
-    if (!this.playList.find(({ enclosure }) => enclosure.url === podcast?.enclosure?.url)) {
-      this.setPlayList([...this.playList, podcast]);
-    }
+  addTrack = async (track: Track) => {
+    if (this.queue.some(({ url }) => url === track?.url)) return;
+
+    TrackPlayer.add(track);
+
+    const queue = await TrackPlayer.getQueue();
+
+    this.setQueue(queue);
   };
 
   getStoredData = () => {
-    const storedPlayList = localStorage.getItem('playList') || '[]';
-    const storedCurrentPodcast = localStorage.getItem('currentPodcast') || 'null';
-    const storedCurrentTime = localStorage.getItem('currentTime') || '0';
+    const storedQeue = localStorage.getItem('@PodJS_queue') || '[]';
+    const storedActiveTrack = localStorage.getItem('@PodJS_activeTrack') || 'null';
+    const storedCurrentTime = localStorage.getItem('@PodJS_currentTime') || '0';
 
-    const parsedStoredPlayList: Podcast[] = JSON.parse(storedPlayList);
-    const parsedStoredCurrentPodcast: Podcast = JSON.parse(storedCurrentPodcast);
+    const parsedStoredQueue: Track[] = JSON.parse(storedQeue);
+    const parsedStoredActiveTrack: Track = JSON.parse(storedActiveTrack);
 
-    if (Array.isArray(parsedStoredPlayList) && parsedStoredPlayList.length) {
-      this.setPlayList(parsedStoredPlayList);
+    if (Array.isArray(parsedStoredQueue) && parsedStoredQueue.length) {
+      this.setQueue(parsedStoredQueue);
     }
 
-    if (parsedStoredCurrentPodcast?.enclosure?.url) {
-      this.setCurrentPodcast(parsedStoredCurrentPodcast);
-    }
+    if (parsedStoredActiveTrack?.url) TrackPlayer.load(parsedStoredActiveTrack);
 
     if (storedCurrentTime) {
       const audio = document.querySelector('audio');
@@ -40,78 +42,40 @@ export default class PlayerStore {
     }
   };
 
-  next = () => {
-    let continueLoop = true;
+  removeTrack = async (trackIndex: number) => {
+    TrackPlayer.remove(trackIndex);
 
-    this.playList.forEach((podcast, index) => {
-      const nextPodcast = this.playList[index + 1];
+    const queue = await TrackPlayer.getQueue();
 
-      if (
-        continueLoop &&
-        nextPodcast &&
-        podcast.enclosure.url === this.currentPodcast?.enclosure.url
-      ) {
-        this.setCurrentPodcast(nextPodcast);
-
-        continueLoop = false;
-      }
-    });
+    this.setQueue(queue);
   };
 
-  previous = () => {
-    this.playList.forEach((podcast, index) => {
-      const previousPodcast = this.playList[index - 1];
-
-      if (previousPodcast && podcast.enclosure.url === this.currentPodcast?.enclosure.url) {
-        this.setCurrentPodcast(previousPodcast);
-      }
-    });
+  reset = async () => {
+    TrackPlayer.reset();
+    this.setQueue();
   };
 
-  removePodcastFromPlaylist = (podcast: Podcast) => {
-    const newPlaylist = this.playList.filter(
-      ({ enclosure }) => enclosure.url !== podcast?.enclosure?.url,
-    );
-
-    if (!newPlaylist.length || podcast.enclosure.url === this.currentPodcast?.enclosure.url) {
-      this.setCurrentPodcast();
-
-      const audio = document.querySelector('audio');
-
-      if (audio) {
-        audio.src = '';
-        audio.currentTime = 0;
-        audio.pause();
-      }
-    }
-
-    this.setPlayList(newPlaylist);
+  setQueue = (queue?: Track[]) => {
+    this.queue = queue || [];
+    this.storeQueue();
   };
 
-  reset = () => {
-    this.setCurrentPodcast();
-    this.setPlayList();
-  };
+  storeActiveTrack = async () => {
+    const [activeTrackIndex, queue] = await Promise.all([
+      TrackPlayer.getActiveTrackIndex(),
+      TrackPlayer.getQueue(),
+    ]);
 
-  setCurrentPodcast = (podcast?: Podcast) => {
-    this.currentPodcast = podcast || null;
-    this.storeCurrentPodcast();
-  };
+    if (!activeTrackIndex || !queue.length) return;
 
-  setPlayList = (playlist?: Podcast[]) => {
-    this.playList = playlist || [];
-    this.storePlaylist();
-  };
-
-  storeCurrentPodcast = () => {
-    localStorage.setItem('currentPodcast', JSON.stringify(this.currentPodcast));
+    localStorage.setItem('@PodJS_activeTrack', JSON.stringify(queue[activeTrackIndex]));
   };
 
   storeCurrentTime = (time: number) => {
-    localStorage.setItem('currentTime', JSON.stringify(time));
+    localStorage.setItem('@PodJS_currentTime', JSON.stringify(time));
   };
 
-  storePlaylist = () => {
-    localStorage.setItem('playList', JSON.stringify(this.playList));
+  storeQueue = () => {
+    localStorage.setItem('@PodJS_queue', JSON.stringify(this.queue));
   };
 }

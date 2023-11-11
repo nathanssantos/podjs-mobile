@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, { Capability, RepeatMode } from 'react-native-track-player';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { RootStore } from './rootStore';
 
 export default class PlayerStore {
@@ -10,7 +11,23 @@ export default class PlayerStore {
   constructor(rootStore: RootStore) {
     makeAutoObservable(this, { rootStore: false });
     this.rootStore = rootStore;
+
+    this.setupPlayer();
   }
+
+  setupPlayer = async () => {
+    await TrackPlayer.setupPlayer();
+
+    const { Play, Pause, Stop, SkipToNext, SkipToPrevious, SeekTo } = Capability;
+
+    await TrackPlayer.updateOptions({
+      capabilities: [Play, Pause, Stop, SkipToNext, SkipToPrevious, SeekTo],
+      compactCapabilities: [Play, Pause],
+      notificationCapabilities: [Play, Pause],
+    });
+
+    TrackPlayer.setRepeatMode(RepeatMode.Queue);
+  };
 
   addTrack = async (track: Track) => {
     if (this.queue.some(({ url }) => url === track?.url)) return;
@@ -22,17 +39,15 @@ export default class PlayerStore {
     this.setQueue(queue);
   };
 
-  getStoredData = () => {
-    const storedQeue = localStorage.getItem('@PodJS_queue') || '[]';
-    const storedActiveTrack = localStorage.getItem('@PodJS_activeTrack') || 'null';
-    const storedCurrentTime = localStorage.getItem('@PodJS_currentTime') || '0';
+  getStoredData = async () => {
+    const storedQueue = await AsyncStorage.getItem('@PodJS_queue');
+    const storedActiveTrack = await AsyncStorage.getItem('@PodJS_activeTrack');
+    const storedCurrentTime = await AsyncStorage.getItem('@PodJS_currentTime');
 
-    const parsedStoredQueue: Track[] = JSON.parse(storedQeue);
-    const parsedStoredActiveTrack: Track = JSON.parse(storedActiveTrack);
+    const parsedStoredQueue: Track[] = storedQueue ? JSON.parse(storedQueue) : [];
+    const parsedStoredActiveTrack: Track = storedActiveTrack ? JSON.parse(storedActiveTrack) : null;
 
-    if (Array.isArray(parsedStoredQueue) && parsedStoredQueue.length) {
-      this.setQueue(parsedStoredQueue);
-    }
+    this.setQueue(parsedStoredQueue);
 
     if (parsedStoredActiveTrack?.url) TrackPlayer.load(parsedStoredActiveTrack);
 
@@ -58,21 +73,18 @@ export default class PlayerStore {
   };
 
   storeActiveTrack = async () => {
-    const [activeTrackIndex, queue] = await Promise.all([
-      TrackPlayer.getActiveTrackIndex(),
-      TrackPlayer.getQueue(),
-    ]);
+    const [activeTrackIndex, queue] = await Promise.all([TrackPlayer.getActiveTrackIndex(), TrackPlayer.getQueue()]);
 
     if (!activeTrackIndex || !queue.length) return;
 
-    localStorage.setItem('@PodJS_activeTrack', JSON.stringify(queue[activeTrackIndex]));
+    AsyncStorage.setItem('@PodJS_activeTrack', JSON.stringify(queue[activeTrackIndex]));
   };
 
   storeCurrentTime = (time: number) => {
-    localStorage.setItem('@PodJS_currentTime', JSON.stringify(time));
+    AsyncStorage.setItem('@PodJS_currentTime', JSON.stringify(time));
   };
 
   storeQueue = () => {
-    localStorage.setItem('@PodJS_queue', JSON.stringify(this.queue));
+    AsyncStorage.setItem('@PodJS_queue', JSON.stringify(this.queue));
   };
 }

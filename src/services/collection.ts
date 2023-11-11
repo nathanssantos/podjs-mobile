@@ -22,15 +22,9 @@ class CollectionService {
 
       if (term) params.term = term;
 
-      const { status, data } = await api.get(`search`, {
-        params,
-      });
+      const { status, data } = await api.get(`search`, { params });
 
-      if (status === 200 && !data?.results.length) {
-        return {
-          status: 'empty',
-        };
-      }
+      if (status === 200 && !data?.results.length) return { status: 'empty' };
 
       const payload: Collection[] = data.results;
 
@@ -42,25 +36,15 @@ class CollectionService {
       console.error('Collection.find');
       console.log({ error });
 
-      return {
-        status: 'error',
-      };
+      return { status: 'error' };
     }
   };
 
   static findOne = async (collection: Collection): Promise<ActionResponse<Collection>> => {
     try {
-      const { status, data } = await api.get(`lookup`, {
-        params: {
-          id: collection.id,
-        },
-      });
+      const { status, data } = await api.get(`lookup`, { params: { id: collection.id } });
 
-      if (status === 200 && !data?.results?.[0]) {
-        return {
-          status: 'empty',
-        };
-      }
+      if (status === 200 && !data?.results?.[0]) return { status: 'empty' };
 
       const {
         collectionId,
@@ -79,25 +63,19 @@ class CollectionService {
 
       const { description, managingEditor, language, copyright, lastBuildDate, items } = feed;
 
-      if (!items.length) {
-        return {
-          status: 'empty',
-        };
-      }
+      if (!items.length) return { status: 'empty' };
 
-      const trackList: Track[] = items.map(
-        ({ title, genre, isoDate, enclosure, content, itunes }) => ({
-          id: uuid(),
-          description: itunes.summary || content,
-          date: isoDate,
-          url: enclosure?.url,
-          artwork: itunes?.image || artworkUrl100,
-          duration: itunes?.length,
-          artist: artistName,
-          title,
-          genre,
-        }),
-      ) as Track[];
+      const trackList: Track[] = items.map(({ title, genre, isoDate, enclosure, content, itunes }) => ({
+        id: uuid(),
+        description: itunes.summary || content,
+        date: isoDate,
+        url: enclosure?.url,
+        artwork: itunes?.image || artworkUrl100,
+        duration: itunes?.length,
+        artist: artistName,
+        title,
+        genre,
+      })) as Track[];
 
       const payload: Collection = {
         id: collectionId,
@@ -126,26 +104,17 @@ class CollectionService {
       console.error('Collection.findOne');
       console.log({ error });
 
-      return {
-        status: 'error',
-      };
+      return { status: 'error' };
     }
   };
 
-  static findRank = async ({
-    country = 'br',
-    limit = 10,
-  }: FindParams): Promise<ActionResponse<Collection[]>> => {
+  static findRank = async ({ country = 'br', limit = 10 }: FindParams): Promise<ActionResponse<Collection[]>> => {
     try {
       const { status, data } = await axios.get(
         `https://rss.applemarketingtools.com/api/v2/${country}/podcasts/top/${limit}/podcasts.json`,
       );
 
-      if (status === 200 && !data?.feed?.results?.length) {
-        return {
-          status: 'empty',
-        };
-      }
+      if (status === 200 && !data?.feed?.results?.length) return { status: 'empty' };
 
       const payload: Collection[] = data.feed.results.map(
         ({
@@ -178,9 +147,7 @@ class CollectionService {
       console.error('Collection.findRank');
       console.log({ error });
 
-      return {
-        status: 'error',
-      };
+      return { status: 'error' };
     }
   };
 }

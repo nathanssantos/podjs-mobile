@@ -25,9 +25,7 @@ export default class CollectionStore {
   }
 
   addCollectionToFavorites = (collection: Collection) => {
-    if (!this.favorites?.find(({ id }) => id === collection.id)) {
-      this.setFavorites([...this.favorites, collection]);
-    }
+    if (!this.favorites?.find(({ id }) => id === collection.id)) this.setFavorites([...this.favorites, collection]);
   };
 
   getDetail = async (collection: Collection): Promise<ActionResponse<Collection>> => {
@@ -45,34 +43,20 @@ export default class CollectionStore {
 
       this.setDetailStatus(status);
 
-      return {
-        status,
-      };
+      return { status };
     } catch (error) {
       console.error('Collection.getDetail');
       console.log({ error });
 
       this.setDetailStatus('error');
 
-      return {
-        status: 'error',
-      };
+      return { status: 'error' };
     }
   };
 
-  getList = async ({
-    term,
-    country,
-  }: {
-    term: string;
-    country: string;
-  }): Promise<ActionResponse<Collection[]>> => {
+  getList = async ({ term, country }: { term: string; country: string }): Promise<ActionResponse<Collection[]>> => {
     try {
-      if (this.list?.length && term === this.searchTerm && country === this.searchCountry) {
-        return {
-          status: 'success',
-        };
-      }
+      if (this.list?.length && term === this.searchTerm && country === this.searchCountry) return { status: 'success' };
 
       this.setListStatus('fetching');
       this.setList();
@@ -89,18 +73,14 @@ export default class CollectionStore {
 
       this.setListStatus(status);
 
-      return {
-        status,
-      };
+      return { status };
     } catch (error) {
       console.error('Collection.getList');
       console.log({ error });
 
       this.setListStatus('error');
 
-      return {
-        status: 'error',
-      };
+      return { status: 'error' };
     }
   };
 
@@ -109,43 +89,35 @@ export default class CollectionStore {
       this.setRankStatus('fetching');
       this.setRank();
 
-      const { status, payload } = await CollectionService.findRank({
-        country: this.rankCountry,
-      });
+      const { status, payload } = await CollectionService.findRank({ country: this.rankCountry });
 
       if (payload) this.setRank(payload);
 
       this.setRankStatus(status);
 
-      return {
-        status,
-      };
+      return { status };
     } catch (error) {
       console.error('Collection.getRank');
       console.log({ error });
 
       this.setRankStatus('error');
 
-      return {
-        status: 'error',
-      };
+      return { status: 'error' };
     }
   };
 
   getStoredData = async () => {
     const storedFavorites = await AsyncStorage.getItem('@PodJS_favorites');
-    const parsedStoredFavorites: Collection[] = JSON.parse(storedFavorites || '[]');
+    const parsedStoredFavorites: Collection[] = storedFavorites ? JSON.parse(storedFavorites) : [];
 
     const storedRankCountry = await AsyncStorage.getItem('@PodJS_rankCountry');
-    const parsedStoredRankCountry: string = storedRankCountry || 'br';
 
-    if (parsedStoredFavorites?.length) this.setFavorites(parsedStoredFavorites);
-    if (parsedStoredRankCountry?.length) this.setRankCountry(parsedStoredRankCountry);
+    this.setFavorites(parsedStoredFavorites);
+    this.setRankCountry(storedRankCountry || 'br');
   };
 
   removeCollectionFromFavorites = (collection: Collection) => {
     const newFavorites = this.favorites.filter(({ id }) => id !== collection.id);
-
     this.setFavorites(newFavorites);
   };
 
@@ -169,9 +141,7 @@ export default class CollectionStore {
     if (term) {
       this.setDetailSearchResult(
         this.detail.items.filter((item) =>
-          normalizeString(item.title.toLowerCase()).includes(
-            normalizeString(term.toLowerCase()),
-          ),
+          normalizeString(item.title.toLowerCase()).includes(normalizeString(term.toLowerCase())),
         ),
       );
 

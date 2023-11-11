@@ -8,9 +8,7 @@ export class RootStore {
   playerStore = new PlayerStore(this);
 
   constructor() {
-    configure({
-      enforceActions: 'never',
-    });
+    configure({ enforceActions: 'never' });
   }
 
   reset = () => {

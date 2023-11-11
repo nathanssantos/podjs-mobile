@@ -1,5 +1,6 @@
 import axios from 'axios';
 import RssParser from 'rss-parser';
+import { v4 as uuid } from 'uuid';
 import api from './api';
 
 const rssParser = new RssParser();
@@ -84,19 +85,24 @@ class CollectionService {
         };
       }
 
-      const podcastList = items.map(({ title, link, isoDate, enclosure, content, itunes }) => ({
-        title,
-        link,
-        isoDate,
-        enclosure,
-        content,
-        itunes,
-      })) as Podcast[];
+      const trackList: Track[] = items.map(
+        ({ title, genre, isoDate, enclosure, content, itunes }) => ({
+          id: uuid(),
+          description: itunes.summary || content,
+          date: isoDate,
+          url: enclosure?.url,
+          artwork: itunes?.image || artworkUrl100,
+          duration: itunes?.length,
+          artist: artistName,
+          title,
+          genre,
+        }),
+      ) as Track[];
 
       const payload: Collection = {
         id: collectionId,
         name: collectionName,
-        items: podcastList,
+        items: trackList,
         artistName,
         feedUrl,
         artworkUrl100,

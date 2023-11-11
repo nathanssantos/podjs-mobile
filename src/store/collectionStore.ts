@@ -8,7 +8,7 @@ export default class CollectionStore {
   rootStore: RootStore;
 
   detail: Collection | null = null;
-  detailSearchResult: Podcast[] | null = null;
+  detailSearchResult: Track[] | null = null;
   detailStatus: FetchStatus = 'idle';
   favorites: Collection[] = [];
   list: Collection[] | null = null;
@@ -185,7 +185,7 @@ export default class CollectionStore {
     this.detail = detail || null;
   };
 
-  setDetailSearchResult = (detailSearchResult?: Podcast[]) => {
+  setDetailSearchResult = (detailSearchResult?: Track[]) => {
     this.detailSearchResult = detailSearchResult || [];
   };
 

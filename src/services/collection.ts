@@ -46,8 +46,17 @@ class CollectionService {
 
       if (status === 200 && !data?.results?.[0]) return { status: 'empty' };
 
-      const { collectionId, artistName, collectionName, feedUrl, artworkUrl100, artworkUrl600, genres, trackCount, country } =
-        data.results[0];
+      const {
+        collectionId,
+        artistName,
+        collectionName,
+        feedUrl,
+        artworkUrl100,
+        artworkUrl600,
+        genres,
+        trackCount,
+        country,
+      } = data.results[0];
 
       const feed = await rssParser.parseURL(feedUrl);
 
@@ -97,7 +106,10 @@ class CollectionService {
     }
   };
 
-  static findRank = async ({ country = 'br', limit = 10 }: FindParams): Promise<ActionResponse<Collection[]>> => {
+  static findRank = async ({
+    country = 'br',
+    limit = 10,
+  }: FindParams): Promise<ActionResponse<Collection[]>> => {
     try {
       const { status, data } = await axios.get(
         `https://rss.applemarketingtools.com/api/v2/${country}/podcasts/top/${limit}/podcasts.json`,

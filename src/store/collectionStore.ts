@@ -25,7 +25,8 @@ export default class CollectionStore {
   }
 
   addCollectionToFavorites = (collection: Collection) => {
-    if (!this.favorites?.find(({ id }) => id === collection.id)) this.setFavorites([...this.favorites, collection]);
+    if (!this.favorites?.find(({ id }) => id === collection.id))
+      this.setFavorites([...this.favorites, collection]);
   };
 
   getDetail = async (collection: Collection): Promise<ActionResponse<Collection>> => {
@@ -54,9 +55,16 @@ export default class CollectionStore {
     }
   };
 
-  getList = async ({ term, country }: { term: string; country: string }): Promise<ActionResponse<Collection[]>> => {
+  getList = async ({
+    term,
+    country,
+  }: {
+    term: string;
+    country: string;
+  }): Promise<ActionResponse<Collection[]>> => {
     try {
-      if (this.list?.length && term === this.searchTerm && country === this.searchCountry) return { status: 'success' };
+      if (this.list?.length && term === this.searchTerm && country === this.searchCountry)
+        return { status: 'success' };
 
       this.setListStatus('fetching');
       this.setList();

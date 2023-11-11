@@ -73,7 +73,10 @@ export default class PlayerStore {
   };
 
   storeActiveTrack = async () => {
-    const [activeTrackIndex, queue] = await Promise.all([TrackPlayer.getActiveTrackIndex(), TrackPlayer.getQueue()]);
+    const [activeTrackIndex, queue] = await Promise.all([
+      TrackPlayer.getActiveTrackIndex(),
+      TrackPlayer.getQueue(),
+    ]);
 
     if (!activeTrackIndex || !queue.length) return;
 

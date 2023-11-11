@@ -36,7 +36,7 @@ export default class PlayerStore {
 
     const queue = await TrackPlayer.getQueue();
 
-    this.setQueue(queue);
+    this.setQueue(queue as Track[]);
   };
 
   getStoredData = async () => {
@@ -59,7 +59,7 @@ export default class PlayerStore {
 
     const queue = await TrackPlayer.getQueue();
 
-    this.setQueue(queue);
+    this.setQueue(queue as Track[]);
   };
 
   reset = async () => {

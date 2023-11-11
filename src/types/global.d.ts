@@ -13,7 +13,17 @@ type FindParams = {
   limit?: number;
 };
 
-type Track = import('react-native-track-player').Track;
+type Track = {
+  id: string;
+  url: string;
+  description: string;
+  date: string;
+  artwork: string;
+  duration: number;
+  artist: string;
+  title: string;
+  genre: string;
+};
 
 type Collection = {
   id: string;
@@ -21,15 +31,14 @@ type Collection = {
   name: string;
   artworkUrl100: string;
   artworkUrl600: string;
-  description?: string;
+  description: string;
   managingEditor: string;
   language: string;
   copyright: string;
   lastBuildDate: string;
-  primaryGenreName: string;
   genres: string[];
   feedUrl: string;
   trackCount: number;
   country: string;
-  items: Podcast[];
+  items: Track[];
 };

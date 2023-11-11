@@ -46,18 +46,8 @@ class CollectionService {
 
       if (status === 200 && !data?.results?.[0]) return { status: 'empty' };
 
-      const {
-        collectionId,
-        artistName,
-        collectionName,
-        feedUrl,
-        artworkUrl100,
-        artworkUrl600,
-        genres,
-        primaryGenreName,
-        trackCount,
-        country,
-      } = data.results[0];
+      const { collectionId, artistName, collectionName, feedUrl, artworkUrl100, artworkUrl600, genres, trackCount, country } =
+        data.results[0];
 
       const feed = await rssParser.parseURL(feedUrl);
 
@@ -67,31 +57,30 @@ class CollectionService {
 
       const trackList: Track[] = items.map(({ title, genre, isoDate, enclosure, content, itunes }) => ({
         id: uuid(),
-        description: itunes.summary || content,
-        date: isoDate,
-        url: enclosure?.url,
-        artwork: itunes?.image || artworkUrl100,
-        duration: itunes?.length,
-        artist: artistName,
-        title,
-        genre,
-      })) as Track[];
+        description: itunes?.summary || content || '',
+        date: isoDate || '',
+        url: enclosure?.url || '',
+        artwork: itunes?.image || artworkUrl100 || '',
+        duration: itunes?.length || 0,
+        artist: artistName || '',
+        title: title || '',
+        genre: genre || '',
+      }));
 
       const payload: Collection = {
-        id: collectionId,
+        id: String(collectionId),
         name: collectionName,
         items: trackList,
+        description: description || '',
         artistName,
         feedUrl,
         artworkUrl100,
         artworkUrl600,
         genres,
-        description,
         managingEditor,
         language,
         copyright,
         lastBuildDate,
-        primaryGenreName,
         trackCount,
         country,
       };
@@ -116,28 +105,7 @@ class CollectionService {
 
       if (status === 200 && !data?.feed?.results?.length) return { status: 'empty' };
 
-      const payload: Collection[] = data.feed.results.map(
-        ({
-          id,
-          artistName,
-          name,
-          artworkUrl100,
-          genres,
-        }: {
-          artistName: string;
-          id: string;
-          name: string;
-          artworkUrl100: string;
-          genres: { name: string }[];
-        }) => ({
-          id,
-          artistName,
-          name,
-          artworkUrl100,
-          genres,
-          primaryGenreName: genres?.[0]?.name || '',
-        }),
-      );
+      const payload: Collection[] = data.feed.results;
 
       return {
         payload,

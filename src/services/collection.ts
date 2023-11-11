@@ -2,21 +2,24 @@ import axios from 'axios';
 import RssParser from 'rss-parser';
 import api from './api';
 
+const rssParser = new RssParser();
+
 class CollectionService {
   static find = async ({
-    term,
     country = 'br',
+    entity = 'podcast',
     limit = 50,
+    term,
   }: FindParams): Promise<ActionResponse<Collection[]>> => {
     try {
       const params = {
-        entity: 'podcast',
-        media: 'podcast',
+        country,
+        entity,
         limit,
+        media: entity,
       } as FindParams;
 
-      if (typeof term === 'string' && term?.length) params.term = term;
-      if (typeof country === 'string' && country?.length) params.country = country;
+      if (term) params.term = term;
 
       const { status, data } = await api.get(`search`, {
         params,
@@ -44,11 +47,11 @@ class CollectionService {
     }
   };
 
-  static findOne = async (id: string): Promise<ActionResponse<Collection>> => {
+  static findOne = async (collection: Collection): Promise<ActionResponse<Collection>> => {
     try {
       const { status, data } = await api.get(`lookup`, {
         params: {
-          id,
+          id: collection.id,
         },
       });
 
@@ -71,7 +74,7 @@ class CollectionService {
         country,
       } = data.results[0];
 
-      const feed = await new RssParser().parseURL(feedUrl);
+      const feed = await rssParser.parseURL(feedUrl);
 
       const { description, managingEditor, language, copyright, lastBuildDate, items } = feed;
 

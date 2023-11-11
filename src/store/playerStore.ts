@@ -30,7 +30,7 @@ export default class PlayerStore {
       this.setPlayList(parsedStoredPlayList);
     }
 
-    if (parsedStoredCurrentPodcast?.enclosure?.url?.length) {
+    if (parsedStoredCurrentPodcast?.enclosure?.url) {
       this.setCurrentPodcast(parsedStoredCurrentPodcast);
     }
 

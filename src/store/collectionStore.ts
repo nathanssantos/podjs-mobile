@@ -1,8 +1,8 @@
 import { makeAutoObservable } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import normalizeString from '../utils/normalizeString';
-import api from '../services/api';
 import type { RootStore } from './rootStore';
+import CollectionService from '../services/collection';
 
 export default class CollectionStore {
   rootStore: RootStore;
@@ -30,28 +30,23 @@ export default class CollectionStore {
     }
   };
 
-  getDetail = async (collection: Collection): Promise<ActionResponse<Podcast>> => {
+  getDetail = async (collection: Collection): Promise<ActionResponse<Collection>> => {
     try {
       this.setDetailStatus('fetching');
       this.setDetail();
       this.setDetailSearchResult();
 
-      const { status, data } = await api.get(`/api/collections/${collection.id}`);
+      const { status, payload } = await CollectionService.findOne(collection);
 
-      if (status === 200 && !data) {
-        this.setDetailStatus('empty');
-
-        return {
-          status: 'empty',
-        };
+      if (payload) {
+        this.setDetail(payload);
+        this.setDetailSearchResult(payload.items);
       }
 
-      this.setDetail(data);
-      this.setDetailSearchResult(data.items);
-      this.setDetailStatus('success');
+      this.setDetailStatus(status);
 
       return {
-        status: 'success',
+        status,
       };
     } catch (error) {
       console.error('Collection.getDetail');
@@ -82,37 +77,20 @@ export default class CollectionStore {
       this.setListStatus('fetching');
       this.setList();
 
-      const params: { term: string; country: string } = { term: '', country: '' };
+      if (term) this.setSearchTerm(term);
+      else this.setSearchTerm();
 
-      if (term) {
-        this.setSearchTerm(term);
-        params.term = term;
-      } else {
-        this.setSearchTerm();
-      }
+      if (country) this.setSearchCountry(country);
+      else this.setSearchCountry();
 
-      if (country) {
-        this.setSearchCountry(country);
-        params.country = country;
-      } else {
-        this.setSearchCountry();
-      }
+      const { status, payload } = await CollectionService.find({ term, country });
 
-      const { data } = await api.get<Collection[]>('/api/collections', { params });
+      if (payload) this.setList(payload);
 
-      if (!data?.length) {
-        this.setListStatus('empty');
-
-        return {
-          status: 'empty',
-        };
-      }
-
-      this.setList(data);
-      this.setListStatus('success');
+      this.setListStatus(status);
 
       return {
-        status: 'success',
+        status,
       };
     } catch (error) {
       console.error('Collection.getList');
@@ -131,25 +109,16 @@ export default class CollectionStore {
       this.setRankStatus('fetching');
       this.setRank();
 
-      const params: { country: string } = { country: this.rankCountry };
-
-      const { status, data } = await api.get<Collection[]>('/api/collections/rank', {
-        params,
+      const { status, payload } = await CollectionService.findRank({
+        country: this.rankCountry,
       });
 
-      if (status === 200 && !data?.length) {
-        this.setRankStatus('empty');
+      if (payload) this.setRank(payload);
 
-        return {
-          status: 'empty',
-        };
-      }
-
-      this.setRank(data);
-      this.setRankStatus('success');
+      this.setRankStatus(status);
 
       return {
-        status: 'success',
+        status,
       };
     } catch (error) {
       console.error('Collection.getRank');
@@ -197,7 +166,7 @@ export default class CollectionStore {
 
     if (!this.detail?.items) return;
 
-    if (term?.length) {
+    if (term) {
       this.setDetailSearchResult(
         this.detail.items.filter((item) =>
           normalizeString(item.title.toLowerCase()).includes(

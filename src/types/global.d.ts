@@ -9,8 +9,8 @@ type ActionResponse<P> = {
 type FindParams = {
   country?: string;
   term?: string;
-  entity: string;
-  limit: number;
+  entity?: string;
+  limit?: number;
 };
 
 type Podcast = {

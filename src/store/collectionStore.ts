@@ -46,7 +46,7 @@ export default class CollectionStore {
 
       return { status };
     } catch (error) {
-      console.error('Collection.getDetail');
+      console.error('CollectionStore.getDetail');
       console.log({ error });
 
       this.setDetailStatus('error');
@@ -83,7 +83,7 @@ export default class CollectionStore {
 
       return { status };
     } catch (error) {
-      console.error('Collection.getList');
+      console.error('CollectionStore.getList');
       console.log({ error });
 
       this.setListStatus('error');
@@ -105,7 +105,7 @@ export default class CollectionStore {
 
       return { status };
     } catch (error) {
-      console.error('Collection.getRank');
+      console.error('CollectionStore.getRank');
       console.log({ error });
 
       this.setRankStatus('error');

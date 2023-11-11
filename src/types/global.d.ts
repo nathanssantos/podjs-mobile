@@ -32,10 +32,8 @@ type Collection = {
   artworkUrl100: string;
   artworkUrl600: string;
   description: string;
-  managingEditor: string;
   language: string;
   copyright: string;
-  lastBuildDate: string;
   genres: string[];
   feedUrl: string;
   trackCount: number;

@@ -1,9 +1,7 @@
 import axios from 'axios';
-import RssParser from 'rss-parser';
+import { parse } from 'react-native-rss-parser';
 import { v4 as uuid } from 'uuid';
 import api from './api';
-
-const rssParser = new RssParser();
 
 class CollectionService {
   static find = async ({
@@ -33,7 +31,7 @@ class CollectionService {
         status: 'success',
       };
     } catch (error) {
-      console.error('Collection.find');
+      console.error('CollectionService.find');
       console.log({ error });
 
       return { status: 'error' };
@@ -58,38 +56,38 @@ class CollectionService {
         country,
       } = data.results[0];
 
-      const feed = await rssParser.parseURL(feedUrl);
+      const parsedFeed = await parse(feedUrl);
 
-      const { description, managingEditor, language, copyright, lastBuildDate, items } = feed;
+      const { description, language, copyright, items } = parsedFeed;
 
       if (!items.length) return { status: 'empty' };
 
-      const trackList: Track[] = items.map(({ title, genre, isoDate, enclosure, content, itunes }) => ({
-        id: uuid(),
-        description: itunes?.summary || content || '',
-        date: isoDate || '',
-        url: enclosure?.url || '',
-        artwork: itunes?.image || artworkUrl100 || '',
-        duration: itunes?.length || 0,
-        artist: artistName || '',
-        title: title || '',
-        genre: genre || '',
-      }));
+      const trackList: Track[] = items.map(
+        ({ id, title, description, categories, authors, published, enclosures, itunes }) => ({
+          id: id || uuid(),
+          url: enclosures?.[0]?.url || '',
+          description: itunes?.summary || description || '',
+          date: published || '',
+          artwork: itunes?.image || artworkUrl100 || '',
+          duration: Number(itunes?.duration || 0),
+          artist: artistName || authors?.[0]?.name || '',
+          title: title || '',
+          genre: categories?.[0]?.name || '',
+        }),
+      );
 
       const payload: Collection = {
         id: String(collectionId),
         name: collectionName,
         items: trackList,
         description: description || '',
+        copyright: copyright || '',
         artistName,
         feedUrl,
         artworkUrl100,
         artworkUrl600,
         genres,
-        managingEditor,
         language,
-        copyright,
-        lastBuildDate,
         trackCount,
         country,
       };
@@ -99,7 +97,7 @@ class CollectionService {
         status: 'success',
       };
     } catch (error) {
-      console.error('Collection.findOne');
+      console.error('CollectionService.findOne');
       console.log({ error });
 
       return { status: 'error' };
@@ -124,7 +122,7 @@ class CollectionService {
         status: 'success',
       };
     } catch (error) {
-      console.error('Collection.findRank');
+      console.error('CollectionService.findRank');
       console.log({ error });
 
       return { status: 'error' };

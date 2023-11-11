@@ -36,10 +36,7 @@ export default class PlayerStore {
 
     if (parsedStoredActiveTrack?.url) TrackPlayer.load(parsedStoredActiveTrack);
 
-    if (storedCurrentTime) {
-      const audio = document.querySelector('audio');
-      if (audio) audio.currentTime = Number(storedCurrentTime);
-    }
+    if (storedCurrentTime) TrackPlayer.seekTo(Number(storedCurrentTime));
   };
 
   removeTrack = async (trackIndex: number) => {

@@ -1,6 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { makeAutoObservable } from 'mobx';
 import TrackPlayer, { Capability, RepeatMode } from 'react-native-track-player';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { RootStore } from './rootStore';
 
 export default class PlayerStore {

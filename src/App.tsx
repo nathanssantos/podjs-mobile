@@ -1,11 +1,11 @@
 import { registerRootComponent } from 'expo';
 import { useEffect } from 'react';
-import ThemeProvider from './theme/ThemeProvider';
-import TrackPlayer from 'react-native-track-player';
 import Toast from 'react-native-toast-message';
-import playbackService from './services/playback';
+import TrackPlayer from 'react-native-track-player';
 import PlayerScreen from './screens/PlayerScreen';
+import playbackService from './services/playback';
 import RootStoreProvider from './store/RootStoreProvider';
+import ThemeProvider from './theme/ThemeProvider';
 
 const App = () => {
   useEffect(() => {

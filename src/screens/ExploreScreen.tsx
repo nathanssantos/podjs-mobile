@@ -1,22 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Box, Text } from '@gluestack-ui/themed';
 import { StatusBar } from 'expo-status-bar';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#fff',
-  },
-});
+import React from 'react';
 
 const ExploreScreen = () => {
   return (
-    <View style={styles.container}>
+    <Box flex={1} alignItems='center' justifyContent='center'>
       <StatusBar style='auto' />
-      <Text style={{ color: '#fff' }}>Explore</Text>
-    </View>
+      <Text color='#fff'>Explore</Text>
+    </Box>
   );
 };
 

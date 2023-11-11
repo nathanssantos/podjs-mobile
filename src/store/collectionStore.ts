@@ -1,8 +1,8 @@
-import { makeAutoObservable } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { makeAutoObservable } from 'mobx';
+import CollectionService from '../services/collection';
 import normalizeString from '../utils/normalizeString';
 import type { RootStore } from './rootStore';
-import CollectionService from '../services/collection';
 
 export default class CollectionStore {
   rootStore: RootStore;

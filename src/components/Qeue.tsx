@@ -1,14 +1,6 @@
-import {
-  Button,
-  ButtonText,
-  Text,
-  HStack,
-  VStack,
-  Image,
-  Pressable,
-} from '@gluestack-ui/themed';
+import { HStack, Image, Pressable, Text, VStack } from '@gluestack-ui/themed';
+import { useEffect, useState } from 'react';
 import TrackPlayer, { Track } from 'react-native-track-player';
-import { useState, useEffect } from 'react';
 
 const Qeue = () => {
   const [queue, setQueue] = useState<Track[]>([]);
@@ -44,9 +36,7 @@ const Qeue = () => {
                 role='banner'
                 alt={track.title}
               />
-              <Text color={activeTrackIndex === index ? '$blue500' : '$light200'}>
-                {track.title}
-              </Text>
+              <Text color={activeTrackIndex === index ? '$blue500' : '$light200'}>{track.title}</Text>
             </HStack>
           </Pressable>
         ))}

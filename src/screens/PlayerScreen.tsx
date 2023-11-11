@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Button, ButtonText, Text, HStack, VStack } from '@gluestack-ui/themed';
+import { Button, ButtonText, HStack, Text, VStack } from '@gluestack-ui/themed';
+import { useEffect, useState } from 'react';
 import TrackPlayer from 'react-native-track-player';
-import formatDuration from '../utils/formatDuration';
 import Qeue from '../components/Qeue';
 import Tracklist from '../components/TrackList';
+import formatDuration from '../utils/formatDuration';
 
 const PlayerScreen = () => {
   const [progress, setProgress] = useState(0);

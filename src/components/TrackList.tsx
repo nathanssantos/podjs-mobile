@@ -1,13 +1,5 @@
-import {
-  Button,
-  ButtonText,
-  Text,
-  HStack,
-  VStack,
-  Image,
-  Pressable,
-} from '@gluestack-ui/themed';
-import TrackPlayer, { Track } from 'react-native-track-player';
+import { HStack, Image, Pressable, Text, VStack } from '@gluestack-ui/themed';
+import TrackPlayer from 'react-native-track-player';
 
 const trackList = [
   {

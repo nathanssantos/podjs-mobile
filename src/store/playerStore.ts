@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
-import type { RootStore } from './rootStore';
 import TrackPlayer from 'react-native-track-player';
+import type { RootStore } from './rootStore';
 
 export default class PlayerStore {
   rootStore: RootStore;

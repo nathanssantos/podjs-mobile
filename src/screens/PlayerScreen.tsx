@@ -4,6 +4,7 @@ import TrackPlayer from 'react-native-track-player';
 import Qeue from '../components/Qeue';
 import Tracklist from '../components/TrackList';
 import formatDuration from '../utils/formatDuration';
+import Screen from '../components/Screen';
 
 const PlayerScreen = () => {
   const [progress, setProgress] = useState(0);
@@ -22,30 +23,32 @@ const PlayerScreen = () => {
   }, []);
 
   return (
-    <VStack>
-      <Tracklist />
-      <Qeue />
-      <Text
-        sx={{
-          _dark: {
-            color: '$light200',
-          },
-          _light: {
-            color: '$light900',
-          },
-        }}
-      >
-        {formatDuration(progress)}
-      </Text>
-      <HStack gap={4}>
-        <Button onPress={TrackPlayer.play}>
-          <ButtonText>Play</ButtonText>
-        </Button>
-        <Button onPress={TrackPlayer.pause}>
-          <ButtonText>Pause</ButtonText>
-        </Button>
-      </HStack>
-    </VStack>
+    <Screen>
+      <VStack>
+        <Tracklist />
+        <Qeue />
+        <Text
+          sx={{
+            _dark: {
+              color: '$light200',
+            },
+            _light: {
+              color: '$light900',
+            },
+          }}
+        >
+          {formatDuration(progress)}
+        </Text>
+        <HStack gap={4}>
+          <Button onPress={TrackPlayer.play}>
+            <ButtonText>Play</ButtonText>
+          </Button>
+          <Button onPress={TrackPlayer.pause}>
+            <ButtonText>Pause</ButtonText>
+          </Button>
+        </HStack>
+      </VStack>
+    </Screen>
   );
 };
 

@@ -14,9 +14,9 @@ export default class CollectionStore {
   list: Collection[] | null = null;
   listStatus: FetchStatus = 'idle';
   rank: Collection[] | null = null;
-  rankCountry: string = '';
+  rankCountry: string = 'br';
   rankStatus: FetchStatus = 'idle';
-  searchCountry: string = '';
+  searchCountry: string = 'br';
   searchTerm: string = '';
 
   constructor(rootStore: RootStore) {
@@ -29,13 +29,13 @@ export default class CollectionStore {
       this.setFavorites([...this.favorites, collection]);
   };
 
-  getDetail = async (collection: Collection): Promise<ActionResponse<Collection>> => {
+  getDetail = async ({ id }: { id: string }): Promise<ActionResponse<Collection>> => {
     try {
       this.setDetailStatus('fetching');
       this.setDetail();
       this.setDetailSearchResult();
 
-      const { status, payload } = await CollectionService.findOne(collection);
+      const { status, payload } = await CollectionService.findOne({ id });
 
       if (payload) {
         this.setDetail(payload);
@@ -47,7 +47,7 @@ export default class CollectionStore {
       return { status };
     } catch (error) {
       console.error('CollectionStore.getDetail');
-      console.log({ error });
+      console.error({ error });
 
       this.setDetailStatus('error');
 
@@ -63,8 +63,9 @@ export default class CollectionStore {
     country: string;
   }): Promise<ActionResponse<Collection[]>> => {
     try {
-      if (this.list?.length && term === this.searchTerm && country === this.searchCountry)
+      if (this.list?.length && term === this.searchTerm && country === this.searchCountry) {
         return { status: 'success' };
+      }
 
       this.setListStatus('fetching');
       this.setList();
@@ -84,7 +85,7 @@ export default class CollectionStore {
       return { status };
     } catch (error) {
       console.error('CollectionStore.getList');
-      console.log({ error });
+      console.error({ error });
 
       this.setListStatus('error');
 
@@ -106,7 +107,7 @@ export default class CollectionStore {
       return { status };
     } catch (error) {
       console.error('CollectionStore.getRank');
-      console.log({ error });
+      console.error({ error });
 
       this.setRankStatus('error');
 

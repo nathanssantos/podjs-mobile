@@ -6,7 +6,7 @@ const formatMillisecondsToHms = (milliseconds: number) => {
     return date.getUTCHours() + ':' + pad(date.getUTCMinutes()) + ':' + pad(date.getUTCSeconds());
   } catch (error) {
     console.error('formatMillisecondsToHms');
-    console.log({ error });
+    console.error({ error });
 
     return String(milliseconds);
   }

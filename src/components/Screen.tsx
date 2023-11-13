@@ -1,12 +1,10 @@
-import { Box } from '@gluestack-ui/themed';
+import { VStack } from '@gluestack-ui/themed';
 import React, { ReactNode } from 'react';
 
 const Screen = ({ children }: { children: ReactNode }) => {
   return (
-    <Box
+    <VStack
       flex={1}
-      alignItems='center'
-      justifyContent='center'
       sx={{
         _dark: {
           bg: '$light900',
@@ -20,7 +18,7 @@ const Screen = ({ children }: { children: ReactNode }) => {
       {/* <Button onPress={toggleTheme}>
         <ButtonText>Toggle Theme</ButtonText>
       </Button> */}
-    </Box>
+    </VStack>
   );
 };
 

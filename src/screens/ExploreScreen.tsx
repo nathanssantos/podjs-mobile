@@ -1,14 +1,33 @@
-import { Text, VStack } from '@gluestack-ui/themed';
+import { VStack } from '@gluestack-ui/themed';
+import { observer } from 'mobx-react';
+import { useEffect } from 'react';
+import CollectionList from '../components/CollectionList';
 import Screen from '../components/Screen';
+import useStore from '../hooks/useStore';
 
-const ExploreScreen = () => {
+const ExploreScreen = ({ navigation }: StackScreenProps<ExploreStackParamList, 'Explore'>) => {
+  const { collectionStore } = useStore();
+
+  const init = () => {
+    collectionStore.getRank();
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <Screen>
       <VStack>
-        <Text>Explore</Text>
+        <CollectionList
+          data={collectionStore.rank!}
+          refreshing={collectionStore.rankStatus === 'fetching'}
+          onRefresh={init}
+          onClickListItem={({ id }) => navigation.navigate('CollectionDetail', { id })}
+        />
       </VStack>
     </Screen>
   );
 };
 
-export default ExploreScreen;
+export default observer(ExploreScreen);

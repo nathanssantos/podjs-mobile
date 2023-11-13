@@ -6,6 +6,7 @@
     "dev": "expo start --dev-client",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "install": "eas build:run -p android --latest",
     "build": "eas build --profile development --platform android",
     "format": "prettier --write \"{,!(node_modules|public|dist|.expo)/**/}*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"{,!(node_modules|public|dist|.expo)/**/}*.{js,jsx,ts,tsx}\""

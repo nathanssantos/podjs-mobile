@@ -32,15 +32,15 @@ class CollectionService {
       };
     } catch (error) {
       console.error('CollectionService.find');
-      console.log({ error });
+      console.error({ error });
 
       return { status: 'error' };
     }
   };
 
-  static findOne = async (collection: Collection): Promise<ActionResponse<Collection>> => {
+  static findOne = async ({ id }: { id: string }): Promise<ActionResponse<Collection>> => {
     try {
-      const { status, data } = await api.get(`lookup`, { params: { id: collection.id } });
+      const { status, data } = await api.get(`lookup`, { params: { id } });
 
       if (status === 200 && !data?.results?.[0]) return { status: 'empty' };
 
@@ -56,7 +56,9 @@ class CollectionService {
         country,
       } = data.results[0];
 
-      const parsedFeed = await parse(feedUrl);
+      const { data: feed } = await axios.get(feedUrl);
+
+      const parsedFeed = await parse(feed);
 
       const { description, language, copyright, items } = parsedFeed;
 
@@ -69,7 +71,7 @@ class CollectionService {
           description: itunes?.summary || description || '',
           date: published || '',
           artwork: itunes?.image || artworkUrl100 || '',
-          duration: Number(itunes?.duration || 0),
+          duration: Number(itunes?.duration) || 0,
           artist: artistName || authors?.[0]?.name || '',
           title: title || '',
           genre: categories?.[0]?.name || '',
@@ -98,7 +100,7 @@ class CollectionService {
       };
     } catch (error) {
       console.error('CollectionService.findOne');
-      console.log({ error });
+      console.error({ error });
 
       return { status: 'error' };
     }
@@ -106,7 +108,7 @@ class CollectionService {
 
   static findRank = async ({
     country = 'br',
-    limit = 10,
+    limit = 20,
   }: FindParams): Promise<ActionResponse<Collection[]>> => {
     try {
       const { status, data } = await axios.get(
@@ -123,7 +125,7 @@ class CollectionService {
       };
     } catch (error) {
       console.error('CollectionService.findRank');
-      console.log({ error });
+      console.error({ error });
 
       return { status: 'error' };
     }

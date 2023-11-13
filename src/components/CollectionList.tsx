@@ -1,13 +1,13 @@
 import { FlatList, HStack, Image, Pressable, Text, VStack } from '@gluestack-ui/themed';
 
 type TracklistProps = {
-  data: Track[];
+  data: Collection[];
   refreshing: boolean;
   onRefresh: () => void;
-  onClickListItem: (track: Track) => void;
+  onClickListItem: (collection: Collection) => void;
 };
 
-const TrackList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistProps) => {
+const CollectionList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistProps) => {
   return (
     <VStack gap={8}>
       <FlatList
@@ -16,23 +16,23 @@ const TrackList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistPr
           gap: 8,
         }}
         data={data}
-        keyExtractor={(item) => (item as Track).id}
+        keyExtractor={(item) => (item as Collection).id}
         refreshing={refreshing}
         onRefresh={onRefresh}
         renderItem={({ item }) => {
-          const track = item as Track;
+          const collection = item as Collection;
           return (
-            <Pressable key={track.id} onPress={() => onClickListItem({ ...track })}>
+            <Pressable key={collection.id} onPress={() => onClickListItem(collection)}>
               <HStack alignItems='center' gap={16}>
                 <Image
-                  source={{ uri: track.artwork }}
+                  source={{ uri: collection.artworkUrl100 }}
                   width={64}
                   height={64}
                   borderRadius={4}
                   role='banner'
-                  alt={track.title}
+                  alt={collection.name}
                 />
-                <Text flex={1}>{track.title}</Text>
+                <Text flex={1}>{collection.name}</Text>
               </HStack>
             </Pressable>
           );
@@ -42,4 +42,4 @@ const TrackList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistPr
   );
 };
 
-export default TrackList;
+export default CollectionList;

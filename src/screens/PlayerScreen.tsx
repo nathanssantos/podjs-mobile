@@ -1,52 +1,16 @@
-import { Button, ButtonText, HStack, Text, VStack } from '@gluestack-ui/themed';
-import { useEffect, useState } from 'react';
-import TrackPlayer from 'react-native-track-player';
-import Qeue from '../components/Qeue';
-import Tracklist from '../components/TrackList';
-import formatDuration from '../utils/formatDuration';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Button, VStack } from '@gluestack-ui/themed';
+import Player from '../components/Player';
 import Screen from '../components/Screen';
 
-const PlayerScreen = () => {
-  const [progress, setProgress] = useState(0);
-
-  const watchProgress = async () => {
-    setInterval(async () => {
-      const currentProgress = await TrackPlayer.getProgress();
-      setProgress(currentProgress.position);
-    }, 1000);
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      watchProgress();
-    }, 0);
-  }, []);
-
+const PlayerScreen = ({ navigation }: StackScreenProps<PlayerStackParamList, 'Player'>) => {
   return (
     <Screen>
-      <VStack>
-        <Tracklist />
-        <Qeue />
-        <Text
-          sx={{
-            _dark: {
-              color: '$light200',
-            },
-            _light: {
-              color: '$light900',
-            },
-          }}
-        >
-          {formatDuration(progress)}
-        </Text>
-        <HStack gap={4}>
-          <Button onPress={TrackPlayer.play}>
-            <ButtonText>Play</ButtonText>
-          </Button>
-          <Button onPress={TrackPlayer.pause}>
-            <ButtonText>Pause</ButtonText>
-          </Button>
-        </HStack>
+      <VStack px={16} flex={1}>
+        <Button variant='link' alignSelf='flex-end' onPress={() => navigation.navigate('Queue')}>
+          <MaterialIcons name='queue-music' size={32} color='#0084ff' />
+        </Button>
+        <Player />
       </VStack>
     </Screen>
   );

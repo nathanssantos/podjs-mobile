@@ -10,7 +10,7 @@ const formatDuration = (duration: number) => {
     return formatMillisecondsToHms(duration);
   } catch (error) {
     console.error('formatDuration ERROR');
-    console.log({ error });
+    console.error({ error });
 
     return String(duration);
   }

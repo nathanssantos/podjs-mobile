@@ -1,4 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type FetchStatus = 'idle' | 'fetching' | 'error' | 'empty' | 'success';
+
+type ExploreStackParamList = {
+  Explore: any;
+  CollectionDetail: any;
+};
+
+type PlayerStackParamList = {
+  Queue: any;
+  Player: any;
+};
+
+type StackScreenProps<P, N> = import('@react-navigation/stack').StackScreenProps<P, N>;
 
 type ActionResponse<P> = {
   status: FetchStatus;

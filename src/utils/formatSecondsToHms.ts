@@ -6,7 +6,7 @@ const formatSecondsToHms = (seconds: number) => {
     return date.toISOString().split('T')[1].split('.')[0];
   } catch (error) {
     console.error('formatSecondsToHms ERROR');
-    console.log({ error });
+    console.error({ error });
 
     return String(seconds);
   }

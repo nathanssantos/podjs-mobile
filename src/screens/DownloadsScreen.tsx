@@ -3,7 +3,7 @@ import Screen from '../components/Screen';
 
 const DownloadsScreen = () => {
   return (
-    <Screen>
+    <Screen avoidStatusBar>
       <VStack>
         <Text>Downloads</Text>
       </VStack>

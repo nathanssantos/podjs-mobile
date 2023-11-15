@@ -17,7 +17,7 @@ const ExploreScreen = ({ navigation }: StackScreenProps<ExploreStackParamList, '
   }, []);
 
   return (
-    <Screen>
+    <Screen avoidStatusBar>
       <VStack>
         <CollectionList
           data={collectionStore.rank!}

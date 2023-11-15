@@ -1,4 +1,5 @@
-import { FlatList, HStack, Image, Pressable, Text, VStack } from '@gluestack-ui/themed';
+import { FlatList, VStack } from '@gluestack-ui/themed';
+import TrackListItem from './TrackListItem';
 
 type TracklistProps = {
   data: Track[];
@@ -19,24 +20,7 @@ const TrackList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistPr
         keyExtractor={(item) => (item as Track).id}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        renderItem={({ item }) => {
-          const track = item as Track;
-          return (
-            <Pressable key={track.id} onPress={() => onClickListItem({ ...track })}>
-              <HStack alignItems='center' gap={16}>
-                <Image
-                  source={{ uri: track.artwork }}
-                  width={64}
-                  height={64}
-                  borderRadius={4}
-                  role='banner'
-                  alt={track.title}
-                />
-                <Text flex={1}>{track.title}</Text>
-              </HStack>
-            </Pressable>
-          );
-        }}
+        renderItem={({ item }) => <TrackListItem data={item as Track} onClick={onClickListItem} />}
       />
     </VStack>
   );

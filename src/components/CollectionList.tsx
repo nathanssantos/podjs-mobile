@@ -29,7 +29,7 @@ const CollectionList = ({ data, refreshing, onRefresh, onClickListItem }: Trackl
                   width={64}
                   height={64}
                   borderRadius={4}
-                  role='banner'
+                  role='listitem'
                   alt={collection.name}
                 />
                 <Text flex={1}>{collection.name}</Text>

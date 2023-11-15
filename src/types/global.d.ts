@@ -11,6 +11,8 @@ type PlayerStackParamList = {
   Player: any;
 };
 
+type NavigationParamList = ExploreStackParamList & PlayerStackParamList;
+
 type StackScreenProps<P, N> = import('@react-navigation/stack').StackScreenProps<P, N>;
 
 type ActionResponse<P> = {

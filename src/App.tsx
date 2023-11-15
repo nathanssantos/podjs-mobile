@@ -1,14 +1,14 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { registerRootComponent } from 'expo';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import { DarkTheme } from '@react-navigation/native';
 import TrackPlayer from 'react-native-track-player';
+import Router from './router/Router';
 import playbackService from './services/playback';
 import RootStoreProvider from './store/RootStoreProvider';
 import ThemeProvider from './theme/ThemeProvider';
-import Router from './router/Router';
 
 const App = () => {
   useEffect(() => {
@@ -23,6 +23,7 @@ const App = () => {
         <ThemeProvider>
           <Router />
           <Toast />
+          <StatusBar />
         </ThemeProvider>
       </RootStoreProvider>
     </NavigationContainer>

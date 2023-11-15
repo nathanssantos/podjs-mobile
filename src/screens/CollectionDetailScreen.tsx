@@ -6,7 +6,10 @@ import Screen from '../components/Screen';
 import TrackList from '../components/TrackList';
 import useStore from '../hooks/useStore';
 
-const CollectionDetailScreen = ({ route }: StackScreenProps<ExploreStackParamList, 'CollectionDetail'>) => {
+const CollectionDetailScreen = ({
+  route,
+  navigation,
+}: StackScreenProps<NavigationParamList, 'CollectionDetail'>) => {
   const { collectionStore } = useStore();
 
   const { id } = route.params as { id: string };
@@ -19,6 +22,7 @@ const CollectionDetailScreen = ({ route }: StackScreenProps<ExploreStackParamLis
     try {
       const index = await TrackPlayer.add(track);
       await TrackPlayer.skip(index || 0);
+      navigation.navigate('Player');
       TrackPlayer.play();
     } catch (error) {
       console.error({ error });

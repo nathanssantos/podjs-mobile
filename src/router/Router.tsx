@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 const PlayerStack = () => {
   return (
     <Stack.Navigator initialRouteName='Player'>
-      <Stack.Screen name='Player' component={PlayerScreen} />
+      <Stack.Screen name='Player' component={PlayerScreen} options={{ headerShown: false }} />
       <Stack.Screen name='Queue' component={QueueScreen} />
     </Stack.Navigator>
   );
@@ -22,7 +22,7 @@ const PlayerStack = () => {
 const ExploreStack = () => {
   return (
     <Stack.Navigator initialRouteName='Explore'>
-      <Stack.Screen name='Explore' component={ExploreScreen} />
+      <Stack.Screen name='Explore' component={ExploreScreen} options={{ headerShown: false }} />
       <Stack.Screen name='CollectionDetail' component={CollectionDetailScreen} />
     </Stack.Navigator>
   );

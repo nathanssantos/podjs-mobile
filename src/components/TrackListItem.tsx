@@ -2,12 +2,14 @@ import { HStack, Image, Pressable, Text } from '@gluestack-ui/themed';
 
 type TrackListItemProps = {
   data: Track;
-  onClick: (track: Track) => void;
+  isActive?: boolean;
+  index: number;
+  onClick: ({ track, index }: { track: Track; index: number }) => void;
 };
 
-const TrackListItem = ({ data, onClick }: TrackListItemProps) => {
+const TrackListItem = ({ data, isActive, index, onClick }: TrackListItemProps) => {
   return (
-    <Pressable key={data.id} onPress={() => onClick({ ...data })}>
+    <Pressable key={data.id} onPress={() => onClick({ track: { ...data }, index })}>
       <HStack alignItems='center' gap={16}>
         <Image
           source={{ uri: data.artwork }}
@@ -17,7 +19,9 @@ const TrackListItem = ({ data, onClick }: TrackListItemProps) => {
           role='listitem'
           alt={data.title}
         />
-        <Text flex={1}>{data.title}</Text>
+        <Text flex={1} fontSize={14} color={isActive ? '$blue500' : '$light200'}>
+          {data.title}
+        </Text>
       </HStack>
     </Pressable>
   );

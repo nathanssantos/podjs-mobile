@@ -1,9 +1,10 @@
-import { FlatList, HStack, Image, Pressable, Text, VStack } from '@gluestack-ui/themed';
+import { FlatList, VStack } from '@gluestack-ui/themed';
+import TrackListItem from './TrackListItem';
 
 type TracklistProps = {
   data: Track[];
   activeTrackIndex: number | undefined;
-  onClickListItem: (index: number) => Promise<void>;
+  onClickListItem: ({ track, index }: { track: Track; index: number }) => void;
 };
 
 const Queue = ({ data, activeTrackIndex, onClickListItem }: TracklistProps) => {
@@ -16,26 +17,14 @@ const Queue = ({ data, activeTrackIndex, onClickListItem }: TracklistProps) => {
         }}
         data={data}
         keyExtractor={(item) => (item as Track).id}
-        renderItem={({ item, index }) => {
-          const track = item as Track;
-          return (
-            <Pressable key={track.id} onPress={() => onClickListItem(index)}>
-              <HStack alignItems='center' gap={16}>
-                <Image
-                  source={{ uri: track.artwork }}
-                  width={64}
-                  height={64}
-                  borderRadius={4}
-                  role='banner'
-                  alt={track.title}
-                />
-                <Text color={activeTrackIndex === index ? '$blue500' : '$light200'} flex={1}>
-                  {track.title}
-                </Text>
-              </HStack>
-            </Pressable>
-          );
-        }}
+        renderItem={({ item, index }) => (
+          <TrackListItem
+            data={item as Track}
+            index={index}
+            isActive={activeTrackIndex === index}
+            onClick={onClickListItem}
+          />
+        )}
       />
     </VStack>
   );

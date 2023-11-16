@@ -5,7 +5,7 @@ type TracklistProps = {
   data: Track[];
   refreshing: boolean;
   onRefresh: () => void;
-  onClickListItem: (track: Track) => void;
+  onClickListItem: ({ track, index }: { track: Track; index: number }) => void;
 };
 
 const TrackList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistProps) => {
@@ -20,7 +20,9 @@ const TrackList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistPr
         keyExtractor={(item) => (item as Track).id}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        renderItem={({ item }) => <TrackListItem data={item as Track} onClick={onClickListItem} />}
+        renderItem={({ item, index }) => (
+          <TrackListItem data={item as Track} index={index} onClick={onClickListItem} />
+        )}
       />
     </VStack>
   );

@@ -18,11 +18,11 @@ const CollectionDetailScreen = ({
     collectionStore.getDetail({ id });
   };
 
-  const handleListItemClick = async (track: Track) => {
+  const handleListItemClick = async ({ track }: { track: Track }) => {
     try {
       const index = await TrackPlayer.add(track);
       await TrackPlayer.skip(index || 0);
-      navigation.navigate('Player');
+      navigation.navigate('PlayerStack', { screen: 'Player' });
       TrackPlayer.play();
     } catch (error) {
       console.error({ error });

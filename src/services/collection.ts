@@ -2,6 +2,7 @@ import axios from 'axios';
 import { parse } from 'react-native-rss-parser';
 import { v4 as uuid } from 'uuid';
 import api from './api';
+import { TrackType } from 'react-native-track-player';
 
 class CollectionService {
   static find = async ({
@@ -75,6 +76,7 @@ class CollectionService {
           artist: artistName || authors?.[0]?.name || '',
           title: title || '',
           genre: categories?.[0]?.name || '',
+          type: TrackType.SmoothStreaming,
         }),
       );
 

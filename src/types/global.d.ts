@@ -2,11 +2,13 @@
 type FetchStatus = 'idle' | 'fetching' | 'error' | 'empty' | 'success';
 
 type ExploreStackParamList = {
+  ExploreStack: any;
   Explore: any;
   CollectionDetail: any;
 };
 
 type PlayerStackParamList = {
+  PlayerStack: any;
   Queue: any;
   Player: any;
 };
@@ -38,6 +40,7 @@ type Track = {
   artist: string;
   title: string;
   genre: string;
+  type: import('react-native-track-player').TrackType;
 };
 
 type Collection = {

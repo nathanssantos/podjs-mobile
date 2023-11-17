@@ -11,10 +11,6 @@ const ExploreScreen = ({ navigation }: StackScreenProps<ExploreStackParamList, '
   const { collectionStore } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const init = () => {
-    collectionStore.getRank();
-  };
-
   const debouncedSearch = useMemo(() => {
     return debounce(collectionStore.getList, 1500);
   }, [collectionStore.getList, 1500]);
@@ -24,13 +20,11 @@ const ExploreScreen = ({ navigation }: StackScreenProps<ExploreStackParamList, '
     debouncedSearch({ term, country: 'br' });
   };
 
-  const getListContent = () => {
-    if (searchTerm && collectionStore.list?.length) return collectionStore.list;
-    return collectionStore.rank!;
-  };
+  const listContent =
+    searchTerm && collectionStore.list?.length ? collectionStore.list : collectionStore.rank!;
 
   useEffect(() => {
-    init();
+    collectionStore.getRank();
   }, []);
 
   return (
@@ -38,9 +32,9 @@ const ExploreScreen = ({ navigation }: StackScreenProps<ExploreStackParamList, '
       <VStack>
         <Search value={searchTerm} onChangeText={searchCollection} />
         <CollectionList
-          data={getListContent()}
+          data={listContent}
           refreshing={collectionStore.rankStatus === 'fetching'}
-          onRefresh={init}
+          onRefresh={collectionStore.getRank}
           onClickListItem={({ id }) => navigation.navigate('CollectionDetail', { id })}
         />
       </VStack>

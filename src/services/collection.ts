@@ -25,7 +25,15 @@ class CollectionService {
 
       if (status === 200 && !data?.results.length) return { status: 'empty' };
 
-      const payload: Collection[] = data.results;
+      const payload: Collection[] = data.results.map(
+        ({ collectionId, collectionName, ...rest }: { collectionId: number; collectionName: string }) => ({
+          ...rest,
+          id: String(collectionId),
+          name: collectionName,
+        }),
+      );
+
+      console.log('chamou');
 
       return {
         payload,

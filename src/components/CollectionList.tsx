@@ -9,7 +9,7 @@ type TracklistProps = {
 
 const CollectionList = ({ data, refreshing, onRefresh, onClickListItem }: TracklistProps) => {
   return (
-    <VStack gap={8}>
+    <VStack gap={8} pb={142}>
       <FlatList
         contentContainerStyle={{
           padding: 16,

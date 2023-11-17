@@ -76,19 +76,19 @@ const Player = () => {
             </Text>
             <HStack gap={4} justifyContent='center'>
               <Button variant='link' onPress={() => TrackPlayer.seekBy(-30)}>
-                <MaterialIcons name='replay-30' size={24} color='#0084ff' />
+                <MaterialIcons name='replay-30' size={40} color='#0084ff' />
               </Button>
               {state === State.Playing ? (
                 <Button variant='link' onPress={TrackPlayer.pause}>
-                  <MaterialIcons name='pause' size={32} color='#0084ff' />
+                  <MaterialIcons name='pause' size={40} color='#0084ff' />
                 </Button>
               ) : (
                 <Button variant='link' onPress={TrackPlayer.play}>
-                  <MaterialIcons name='play-arrow' size={32} color='#0084ff' />
+                  <MaterialIcons name='play-arrow' size={40} color='#0084ff' />
                 </Button>
               )}
               <Button variant='link' onPress={() => TrackPlayer.seekBy(30)}>
-                <MaterialIcons name='forward-30' size={24} color='#0084ff' />
+                <MaterialIcons name='forward-30' size={40} color='#0084ff' />
               </Button>
             </HStack>
           </VStack>

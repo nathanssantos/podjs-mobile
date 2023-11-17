@@ -33,8 +33,6 @@ class CollectionService {
         }),
       );
 
-      console.log('chamou');
-
       return {
         payload,
         status: 'success',
